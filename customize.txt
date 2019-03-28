@@ -1,2 +1,0 @@
-sensor.abb_usage:
-  entity_picture: '/local/icons/abb/abb.png'
