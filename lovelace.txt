@@ -1,0 +1,56 @@
+      - type: vertical-stack
+        cards:
+          - type: 'custom:config-template-card'
+            variables:
+              - states['sensor.abb_usage'].state
+              - states['sensor.abb_usage'].attributes['usedMb']
+              - states['sensor.abb_usage'].attributes['downloadedMb']
+              - states['sensor.abb_usage'].attributes['uploadedMb']
+              - states['sensor.abb_usage'].attributes['remainingMb']
+              - states['sensor.abb_usage'].attributes['daysTotal']
+              - states['sensor.abb_usage'].attributes['daysRemaining']
+              - states['sensor.abb_usage'].attributes['lastUpdated']
+              - states['sensor.abb_usage'].attributes['nextRollover']
+              - states['sensor.abb_usage'].attributes['daysUsed']
+            entities:
+              - sensor.abb_usage
+            card:
+              type: 'custom:hui-entities-card'
+              title: ABB Usage
+              show_header_toggle: false
+              entities:
+                - entity: sensor.abb_usage
+                  name: "${'Last Update at' + '\xa0'.repeat(3) + new Date(vars[7]).toLocaleDateString('en-AU', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}) + '\xa0' + 'at' + '\xa0' + new Date(vars[7]).toLocaleTimeString('en-AU')}"
+                - entity: sensor.abb_usage
+                  name: "${'Updated' + '\xa0'.repeat(14) + Number.parseInt((new Date().getTime() - new Date(vars[7])) / 60000) + '\xa0' + 'minutes ago'}"
+                  icon: mdi:clock
+                - entity: sensor.abb_usage
+                  name: "${var usedinfo= ((vars[5] - vars[6] + 1) + Number.parseFloat(((new Date(vars[7]) - new Date().setHours(0,0,0,0)) / 86400000))).toFixed(2); var usedpercent= ((usedinfo / vars[5])*100).toFixed(2); 'Used' + '\xa0'.repeat(20) + usedinfo + '\xa0' + 'days' + '\xa0'.repeat(2) + '-' + '\xa0'.repeat(2) + usedpercent + '%' + '\xa0' + 'of month'}"
+                  icon: mdi:calendar
+                - entity: sensor.abb_usage
+                  name: "${var usedinfo= ((vars[5] - vars[6] + 1) + Number.parseFloat(((new Date(vars[7]) - new Date().setHours(0,0,0,0)) / 86400000))).toFixed(2); var usedpercent= ((usedinfo / vars[5])*100).toFixed(2); var projected= ((vars[1] / usedpercent) / 10 ).toFixed(2); 'Projected Use' + '\xa0'.repeat(4) + projected  + '\xa0' + 'GB'}"
+                  icon: mdi:lan-connect
+                - entity: sensor.abb_usage
+                  name: "${'Next Rollover' + '\xa0'.repeat(5) + new Date(vars[8]).toLocaleDateString('en-AU', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'})}"
+                  icon: mdi:calendar
+                - entity: sensor.abb_usage
+                  name: "${'Today is Day' + '\xa0'.repeat(6) + vars[9] + '\xa0'.repeat(2) + 'of' + '\xa0'.repeat(2) + vars[5] + '\xa0'.repeat(2) + 'days'}"
+                  icon: mdi:calendar
+                - entity: sensor.abb_usage
+                  name: "${'Downloaded' + '\xa0'.repeat(6) + ((vars[2]/1E3).toFixed(2)) + '\xa0' + 'GB' }"
+                  icon: mdi:file-download
+                - entity: sensor.abb_usage
+                  name: "${'Uploaded' + '\xa0'.repeat(11) + ((vars[3]/1E3).toFixed(2)) + '\xa0' + 'GB' }"
+                  icon: mdi:file-upload
+                - entity: sensor.abb_usage
+                  name: "${'Total' + '\xa0'.repeat(19) + (((vars[2] +vars[3]) / 1E3).toFixed(2)) + '\xa0' + 'GB of' + '\xa0' + (vars[4] =! 'null' ? vars[4] : 'Unlimited' + '\xa0' + 'GB')}"
+                  icon: mdi:lan-connect
+          - type: 'custom:bar-card'
+            title: Month Use
+            entity: sensor.abb_usage
+            attribute: daysUsed
+            min: 0
+            max: 31
+            height: 20px
+            direction: right
+            unit_of_measurement: days
