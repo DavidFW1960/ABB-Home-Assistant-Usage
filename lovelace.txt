@@ -28,6 +28,9 @@
                   name: "${var usedinfo= ((vars[5] - vars[6]) + Number.parseFloat(((new Date(vars[7]) - new Date().setHours(0,0,0,0)) / 86400000))).toFixed(2); var usedpercent= ((usedinfo / vars[5])*100).toFixed(2); 'Used' + '\xa0'.repeat(20) + usedinfo + '\xa0' + 'days' + '\xa0'.repeat(2) + '-' + '\xa0'.repeat(2) + usedpercent + '%' + '\xa0' + 'of month'}"
                   icon: mdi:calendar
                 - entity: sensor.abb_usage
+                  name: "${var remaininfo= ((vars[5] - vars[9]) - Number.parseFloat(((new Date(vars[7]) - new Date().setHours(0,0,0,0)) / 86400000))).toFixed(2); var remainpercent= ((remaininfo / vars[5])*100).toFixed(2); 'Remaining' + '\xa0'.repeat(10) + remaininfo + '\xa0' + 'days' + '\xa0'.repeat(2) + '-' + '\xa0'.repeat(2) + remainpercent + '%' + '\xa0' + 'of month'}"
+                  icon: mdi:calendar
+                - entity: sensor.abb_usage
                   name: "${var usedinfo= ((vars[5] - vars[6]) + Number.parseFloat(((new Date(vars[7]) - new Date().setHours(0,0,0,0)) / 86400000))).toFixed(2); var usedpercent= ((usedinfo / vars[5])*100).toFixed(2); var projected= ((vars[1] / usedpercent) / 10 ).toFixed(2); 'Projected Use' + '\xa0'.repeat(4) + projected  + '\xa0' + 'GB'}"
                   icon: mdi:lan-connect
                 - entity: sensor.abb_usage
