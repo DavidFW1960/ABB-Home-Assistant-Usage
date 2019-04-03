@@ -22,9 +22,6 @@ curl -c $cookie -d "username=$abblogin" -d "password=$abbpassword" --url 'https:
 abbusagestring=$(curl -b $cookie --url "https://myaussie-api.aussiebroadband.com.au/broadband/$usageid/usage")
 rm $cookie
 
-# Get Timezone
-zone=$(date +"%:z")
-
 # Get Variables from String
 usedMb=$(echo "$abbusagestring" | jq '.["usedMb"]')
 downloadedMb=$(echo "$abbusagestring" | jq '.["downloadedMb"]')
@@ -38,17 +35,21 @@ lastUpdated=$(echo "$abbusagestring" | jq '.["lastUpdated"]')
 lastUpdated=$(echo "$lastUpdated" | sed 's/.$//g')
 lastUpdated=$(echo $lastUpdated | cut -c2-)
 
-# Build ISO Format Dates for lastUpdated and nextRollover (midnight on rollover day)
-lastUpdated=$(echo "$lastUpdated" | sed 's/ /T/g')$zone
-nextRollover=$(date -d "$lastUpdated+$daysRemaining days" -Is)
+# Calculate Dates
+todaydatetime=$(date -Is)
+lastUpdatedISO=$(echo "$todaydatetime" |sed "s/${todaydatetime:11:8}/${lastUpdated:11:8}/g")
+lastUpdated=$(date -d "$lastUpdated" +%s)
+daysRemainingEpochs=$(($daysRemaining*86400))
+nextRollover=$(($lastUpdated + $daysRemainingEpochs))
+nextRollover=$(date -d @"$nextRollover" -Is)
 nextRollover=$(echo "$nextRollover" |sed "s/${nextRollover:11:8}/00:00:00/g")
+lastUpdated=$lastUpdatedISO
 
 # Build daysUsed from daysTotal and daysRemaining
 daysUsed=$(echo "$(($daysTotal - $daysRemaining))")
 
 # Build JSON output
 abbusagestring='{"state":"","attributes":{"usage":"","usedMb":'"$usedMb"',"downloadedMb":'"$downloadedMb"',"uploadedMb":'"$uploadedMb"',"remainingMb":'"$remainingMb"',"daysTotal":'"$daysTotal"',"daysRemaining":'"$daysRemaining"',"lastUpdated":"'"$lastUpdated"'","nextRollover":"'"$nextRollover"'","daysUsed":'"$daysUsed"',"friendly_name":"ABB Usage","icon":"mdi:blank","entity_picture":"'"$entitypicture"'"}}'
-
 
 # Publish to HA with token
 
