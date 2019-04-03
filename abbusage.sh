@@ -45,6 +45,11 @@ nextRollover=$(date -d @"$nextRollover" -Is)
 nextRollover=$(echo "$nextRollover" |sed "s/${nextRollover:11:8}/00:00:00/g")
 lastUpdated=$lastUpdatedISO
 
+####### ONLY FOR HASSIO.... COMMENT OUT FOR OTHERS #######
+nextRollover=$(echo "$nextRollover" |sed "s/.\{2\}$/:&/")
+lastUpdated=$(echo "$lastUpdated" |sed "s/.\{2\}$/:&/")
+####### END FOR HASSIO ONLY COMMENTS #######
+
 # Build daysUsed from daysTotal and daysRemaining
 daysUsed=$(echo "$(($daysTotal - $daysRemaining))")
 
