@@ -1,4 +1,8 @@
-﻿# Check credentials have been entered
+#!/bin/bash
+
+cd "$(dirname "$0")"
+
+# Checking credentials have been entered
 
 if [[ -e "abbcreds.json" ]]
 then
@@ -9,12 +13,6 @@ else
 fi
 
 # Aussie Broadband Details
-abblogin=$(echo "$abbcreds" | jq '.["abblogin"]')
-abblogin=$(echo "$abblogin" | sed 's/.$//g')
-abblogin=$(echo $abblogin | cut -c2-)
-abbpassword=$(echo "$abbcreds" | jq '.["abbpassword"]')
-abbpassword=$(echo "$abbpassword" | sed 's/.$//g')
-abbpassword=$(echo $abbpassword | cut -c2-)
 usageid=$(echo "$abbcreds" | jq '.["usageid"]')
 usageid=$(echo "$usageid" | sed 's/.$//g')
 usageid=$(echo $usageid | cut -c2-)
@@ -46,11 +44,8 @@ entitypicture=$(echo "$entitypicture" | sed 's/.$//g')
 entitypicture=$(echo $entitypicture | cut -c2-)
 
 # Retrieving ABB Usage Data
-#cookie="$(mktemp)"
 cookie=abbcookie.txt
-#curl -c $cookie -d "username=$abblogin" -d "password=$abbpassword" --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
 abbusagestring=$(curl -b $cookie --url "https://myaussie-api.aussiebroadband.com.au/broadband/$usageid/usage")
-#rm $cookie
 
 # Get Variables from String
 usedMb=$(echo "$abbusagestring" | jq '.["usedMb"]')
@@ -74,11 +69,10 @@ nextRollover=$(($lastUpdated + $daysRemainingEpochs))
 nextRollover=$(date -d @"$nextRollover" -Is)
 nextRollover=$(echo "$nextRollover" |sed "s/${nextRollover:11:8}/00:00:00/g")
 lastUpdated=$lastUpdatedISO
-
-####### ONLY FOR HASSIO.... COMMENT OUT FOR OTHERS #######
-nextRollover=$(echo "$nextRollover" |sed "s/.\{2\}$/:&/")
-lastUpdated=$(echo "$lastUpdated" |sed "s/.\{2\}$/:&/")
-####### END FOR HASSIO ONLY COMMENTS #######
+nextRollover=$(echo "$nextRollover" | sed "s/.\{2\}$/:&/")
+lastUpdated=$(echo "$lastUpdated" | sed "s/.\{2\}$/:&/")
+nextRollover=$(echo "$nextRollover" | sed "s/::/:/g")
+lastUpdated=$(echo "$lastUpdated" | sed "s/::/:/g")
 
 # Build daysUsed from daysTotal and daysRemaining
 daysUsed=$(echo "$(($daysTotal - $daysRemaining))")
