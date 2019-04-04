@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "This script will prompt you for your Aussie Broadband (ABB) and Home Assistant Login Credentials"
 
 if [[ -e "abbcreds.json" ]]

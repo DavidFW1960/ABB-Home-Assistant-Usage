@@ -19,6 +19,21 @@ usageid=$(echo "$abbcreds" | jq '.["usageid"]')
 usageid=$(echo "$usageid" | sed 's/.$//g')
 usageid=$(echo $usageid | cut -c2-)
 
+# Check Cookie has more than 100 days till expiry
+epoch_expire=$(grep 'TRUE' abbcookie.txt)
+epoch_expire=$(echo $epoch_expire | cut -d' ' -f5 -)
+todaydatetime=$(date +%s)
+daysleftcookie=$(($epoch_expire - $todaydatetime - 8640000))
+if [[ $daysleftcookie < 0 ]]
+then 
+  abbtoken=$(cat abbtoken.json)
+  refreshToken=$(echo "$abbtoken" | jq '.["refreshToken"]')
+  refreshToken=$(echo "$refreshToken" | sed 's/.$//g')
+  refreshToken=$(echo $refreshToken | cut -c2-)
+  echo $refreshToken
+  curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
+fi
+
 # Home Assistant Config
 server=$(echo "$abbcreds" | jq '.["server"]')
 server=$(echo "$server" | sed 's/.$//g')
