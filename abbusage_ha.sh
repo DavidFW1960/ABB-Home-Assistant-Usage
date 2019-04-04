@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+﻿# Check credentials have been entered
 
 if [[ -e "abbcreds.json" ]]
 then
