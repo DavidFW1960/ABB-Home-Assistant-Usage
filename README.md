@@ -14,4 +14,4 @@ https://github.com/custom-cards/config-template-card
 
 https://github.com/custom-cards/bar-card
 
-![Lovelace Usage](lovelaceCapture.PNG)
+![Lovelace Usage](lovelaceCapture1.PNG) 
