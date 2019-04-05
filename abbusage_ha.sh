@@ -17,14 +17,16 @@ usageid=$(echo "$abbcreds" | jq '.["usageid"]')
 usageid=$(echo "$usageid" | sed 's/.$//g')
 usageid=$(echo $usageid | cut -c2-)
 
-# Check Cookie has more than 100 days till expiry
+# Check Cookie has more than half life till expiry
 epoch_expire=$(grep 'TRUE' abbcookie.txt)
 epoch_expire=$(echo $epoch_expire | cut -d' ' -f5 -)
 todaydatetime=$(date +%s)
-daysleftcookie=$(($epoch_expire - $todaydatetime - 8640000))
+abbtoken=$(cat abbtoken.json)
+refreshTokenExpires=$(echo "$abbtoken" | jq '.["expiresIn"]')
+refreshTokenExpires=$(($refreshTokenExpires / 2))
+daysleftcookie=$(($epoch_expire - $todaydatetime - $refreshTokenExpires))
 if [[ $daysleftcookie < 0 ]]
 then 
-  abbtoken=$(cat abbtoken.json)
   refreshToken=$(echo "$abbtoken" | jq '.["refreshToken"]')
   refreshToken=$(echo "$refreshToken" | sed 's/.$//g')
   refreshToken=$(echo $refreshToken | cut -c2-)
