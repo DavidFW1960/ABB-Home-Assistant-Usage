@@ -11,7 +11,7 @@ Pre-requisites
 5.  This script should work with any Home Assistant Installation... Hassbian, Hassio etc...
 6.  The abbcreds.sh will give you a 'hint' as to the value you entered the last time you ran the script. If that is unchanged, just press [Enter] otherwise EDIT the correct details in. You WILL need to rerun this script if you change your password!
 7.	Your Home Assistant installation needs to have along term access token
-8.	The Lovelace cards I supply require 2 custom cards.
+8.	You can make your own cards for Lovelace or use my sample ones. The Lovelace cards I supply require 2 custom cards. 
 config-template-card and bar-card available here:
 
 https://github.com/custom-cards/config-template-card
