@@ -28,7 +28,6 @@ then
   refreshToken=$(echo "$abbtoken" | jq '.["refreshToken"]')
   refreshToken=$(echo "$refreshToken" | sed 's/.$//g')
   refreshToken=$(echo $refreshToken | cut -c2-)
-  echo $refreshToken
   curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
 fi
 
