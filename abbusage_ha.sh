@@ -3,7 +3,6 @@
 cd "$(dirname "$0")"
 
 # Checking credentials have been entered
-
 if [[ -e "abbcreds.json" ]]
 then
   abbcreds=$(cat abbcreds.json)
@@ -26,7 +25,7 @@ daysleftcookie=$(($epoch_expire - $todaydatetime - $refreshTokenExpires))
 if [[ $daysleftcookie < 0 ]]
 then 
   refreshToken=$(echo "$abbtoken" | jq -r '.["refreshToken"]')
-  curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
+  curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -d "refresh_token=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
 fi
 
 # Home Assistant Config
@@ -57,8 +56,8 @@ nextRollover=$(date -d @"$nextRollover" -Is)
 nextRollover=$(echo "$nextRollover" |sed "s/${nextRollover:11:8}/00:00:00/g")
 lastUpdated=$lastUpdatedISO
 nextRollover=$(echo "$nextRollover" | sed "s/.\{2\}$/:&/")
-lastUpdated=$(echo "$lastUpdated" | sed "s/.\{2\}$/:&/")
 nextRollover=$(echo "$nextRollover" | sed "s/::/:/g")
+lastUpdated=$(echo "$lastUpdated" | sed "s/.\{2\}$/:&/")
 lastUpdated=$(echo "$lastUpdated" | sed "s/::/:/g")
 
 # Build daysUsed from daysTotal and daysRemaining
