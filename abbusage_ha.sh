@@ -13,9 +13,7 @@ else
 fi
 
 # Aussie Broadband Details
-usageid=$(echo "$abbcreds" | jq '.["usageid"]')
-usageid=$(echo "$usageid" | sed 's/.$//g')
-usageid=$(echo $usageid | cut -c2-)
+usageid=$(echo "$abbcreds" | jq -r '.["usageid"]')
 
 # Check Cookie has more than half life till expiry
 epoch_expire=$(grep 'TRUE' abbcookie.txt)
@@ -27,22 +25,14 @@ refreshTokenExpires=$(($refreshTokenExpires / 2))
 daysleftcookie=$(($epoch_expire - $todaydatetime - $refreshTokenExpires))
 if [[ $daysleftcookie < 0 ]]
 then 
-  refreshToken=$(echo "$abbtoken" | jq '.["refreshToken"]')
-  refreshToken=$(echo "$refreshToken" | sed 's/.$//g')
-  refreshToken=$(echo $refreshToken | cut -c2-)
+  refreshToken=$(echo "$abbtoken" | jq -r '.["refreshToken"]')
   curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
 fi
 
 # Home Assistant Config
-server=$(echo "$abbcreds" | jq '.["server"]')
-server=$(echo "$server" | sed 's/.$//g')
-server=$(echo $server | cut -c2-)
-token=$(echo "$abbcreds" | jq '.["token"]')
-token=$(echo "$token" | sed 's/.$//g')
-token=$(echo $token | cut -c2-)
-entitypicture=$(echo "$abbcreds" | jq '.["entitypicture"]')
-entitypicture=$(echo "$entitypicture" | sed 's/.$//g')
-entitypicture=$(echo $entitypicture | cut -c2-)
+server=$(echo "$abbcreds" | jq -r '.["server"]')
+token=$(echo "$abbcreds" | jq -r '.["token"]')
+entitypicture=$(echo "$abbcreds" | jq -r '.["entitypicture"]')
 
 # Retrieving ABB Usage Data
 cookie=abbcookie.txt
@@ -55,11 +45,7 @@ uploadedMb=$(echo "$abbusagestring" | jq '.["uploadedMb"]')
 remainingMb=$(echo "$abbusagestring" | jq '.["remainingMb"]')
 daysTotal=$(echo "$abbusagestring" | jq '.["daysTotal"]')
 daysRemaining=$(echo "$abbusagestring" | jq '.["daysRemaining"]')
-lastUpdated=$(echo "$abbusagestring" | jq '.["lastUpdated"]')
-
-# Remove leading and trailing "'s
-lastUpdated=$(echo "$lastUpdated" | sed 's/.$//g')
-lastUpdated=$(echo $lastUpdated | cut -c2-)
+lastUpdated=$(echo "$abbusagestring" | jq -r '.["lastUpdated"]')
 
 # Calculate Dates
 todaydatetime=$(date -Is)
