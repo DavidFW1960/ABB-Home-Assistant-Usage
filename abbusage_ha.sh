@@ -12,39 +12,39 @@ else
 fi
 
 # Aussie Broadband Details
-usageid=$(echo "$abbcreds" | jq -r '.["usageid"]')
+usageid=$(echo "$abbcreds" | jq -r '.usageid')
 
 # Check Cookie has more than half life till expiry
 epoch_expire=$(grep 'TRUE' abbcookie.txt)
 epoch_expire=$(echo $epoch_expire | cut -d' ' -f5 -)
 todaydatetime=$(date +%s)
 abbtoken=$(cat abbtoken.json)
-refreshTokenExpires=$(echo "$abbtoken" | jq '.["expiresIn"]')
+refreshTokenExpires=$(echo "$abbtoken" | jq '.expiresIn')
 refreshTokenExpires=$(($refreshTokenExpires / 2))
 daysleftcookie=$(($epoch_expire - $todaydatetime - $refreshTokenExpires))
 if [[ $daysleftcookie < 0 ]]
 then 
-  refreshToken=$(echo "$abbtoken" | jq -r '.["refreshToken"]')
+  refreshToken=$(echo "$abbtoken" | jq -r '.refreshToken')
   curl -c abbcookie.txt -b abbcookie.txt -d "refreshToken=$refreshToken" -d "refresh_token=$refreshToken" -X PUT --url 'https://myaussie-auth.aussiebroadband.com.au/login' > abbtoken.json
 fi
 
 # Home Assistant Config
-server=$(echo "$abbcreds" | jq -r '.["server"]')
-token=$(echo "$abbcreds" | jq -r '.["token"]')
-entitypicture=$(echo "$abbcreds" | jq -r '.["entitypicture"]')
+server=$(echo "$abbcreds" | jq -r '.server')
+token=$(echo "$abbcreds" | jq -r '.token')
+entitypicture=$(echo "$abbcreds" | jq -r '.entitypicture')
 
 # Retrieving ABB Usage Data
 cookie=abbcookie.txt
 abbusagestring=$(curl -b $cookie --url "https://myaussie-api.aussiebroadband.com.au/broadband/$usageid/usage")
 
 # Get Variables from String
-usedMb=$(echo "$abbusagestring" | jq '.["usedMb"]')
-downloadedMb=$(echo "$abbusagestring" | jq '.["downloadedMb"]')
-uploadedMb=$(echo "$abbusagestring" | jq '.["uploadedMb"]')
-remainingMb=$(echo "$abbusagestring" | jq '.["remainingMb"]')
-daysTotal=$(echo "$abbusagestring" | jq '.["daysTotal"]')
-daysRemaining=$(echo "$abbusagestring" | jq '.["daysRemaining"]')
-lastUpdated=$(echo "$abbusagestring" | jq -r '.["lastUpdated"]')
+usedMb=$(echo "$abbusagestring" | jq '.usedMb')
+downloadedMb=$(echo "$abbusagestring" | jq '.downloadedMb')
+uploadedMb=$(echo "$abbusagestring" | jq '.uploadedMb')
+remainingMb=$(echo "$abbusagestring" | jq '.remainingMb')
+daysTotal=$(echo "$abbusagestring" | jq '.daysTotal')
+daysRemaining=$(echo "$abbusagestring" | jq '.daysRemaining')
+lastUpdated=$(echo "$abbusagestring" | jq -r '.lastUpdated')
 
 # Calculate Dates
 todaydatetime=$(date -Is)
