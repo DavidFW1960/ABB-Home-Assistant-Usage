@@ -20,7 +20,7 @@
               show_header_toggle: false
               entities:
                 - entity: sensor.abb_usage
-                  name: "${'Last Update at' + '\xa0'.repeat(3) + new Date(vars[7]).toLocaleDateString('en-AU', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}) + '\xa0' + 'at' + '\xa0' + new Date(vars[7]).toLocaleTimeString('en-AU')}"
+                  name: "${'Last Update on' + '\xa0'.repeat(3) + new Date(vars[7]).toLocaleDateString('en-AU', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}) + '\xa0' + 'at' + '\xa0' + new Date(vars[7]).toLocaleTimeString('en-AU')}"
                 - entity: sensor.abb_usage
                   name: "${'Updated' + '\xa0'.repeat(14) + Number.parseInt((new Date().getTime() - new Date(vars[7])) / 60000) + '\xa0' + 'minutes ago'}"
                   icon: mdi:clock
@@ -57,3 +57,7 @@
             height: 20px
             direction: right
             unit_of_measurement: days
+            tap_action: service
+            service_options:
+              domain: shell_command
+              service: abbusage
