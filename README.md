@@ -8,9 +8,9 @@ Pre-requisites
 2.	The usage retrieval uses a bash script to retrieve the usage json file from Aussie Broadband. This then creates a sensor abb_usage.
 3.  You need to run the abbcreds.sh script first. This stores all your logon information in a file, abbcreds.json; Creates an abbcookie.txt valid for 12 months; creates the abbtoken.json which is a refresh token that is used to refresh the cookie 100 days before it expires. (Cookies are valid for 1 year). This stops us hammering the ABB API unnecessarily.
 4.  This script can be in a sub-directory and *should* be aware of it's location and expects the data files above in the same directory as the script.
-5.  This script should work with any Home Assistant Installation... Hassbian, Hassio etc...
+5.  This script should work with any Home Assistant Installation... Hassbian, Hassio etc... (NOTE: it may not work with HA Docker as apparently and inexplicably, the docker container does not have the linux jq command!!!! In that case a cronjob should work)
 6.  The abbcreds.sh will give you a 'hint' as to the value you entered the last time you ran the script. If that is unchanged, just press [Enter] otherwise EDIT the correct details in. You WILL need to rerun this script if you change your password!
-7.	Your Home Assistant installation needs to have along term access token
+7.	Your Home Assistant installation needs to have a long term access token
 8.	You can make your own cards for Lovelace or use my sample ones. The Lovelace cards I supply require 2 custom cards. 
 config-template-card and bar-card available here:
 
